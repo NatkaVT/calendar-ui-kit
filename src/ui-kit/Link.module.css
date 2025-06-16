@@ -1,0 +1,30 @@
+.link{
+    color: #00AE1C;
+    text-decoration: none;
+    cursor: pointer;
+    background-color: var(--background-color);
+}
+
+.disabled{
+    color: #575D58;
+    text-decoration: none;
+    pointer-events: none;
+}
+
+.link:hover{
+    text-decoration: underline;
+}
+
+.link.hover{
+    text-decoration: underline;
+}
+
+.link:active{
+    color: #0CD52B;
+    text-decoration: underline;
+}
+
+.link.pressed{
+    color: #0CD52B;
+    text-decoration: underline;
+}

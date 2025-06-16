@@ -1,0 +1,25 @@
+.week-view {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 10px 50px;
+  overflow: auto;
+}
+
+.week-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+
+.week-grid {
+  display: flex;
+  flex: 1;
+  border: 1px solid #ccc;
+  background-color: #fff;
+  
+  height: calc(100vh - 200px);
+  overflow-y: auto;
+}

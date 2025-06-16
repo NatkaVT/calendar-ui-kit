@@ -1,0 +1,77 @@
+.container {
+    display: flex;
+    gap: 50px;
+    color: var(--text-color);
+    background-color: var(--background-color);
+    padding: 5px;
+    /* width: 650px; */
+}
+
+.inputContainer {
+    display: flex;
+    flex-direction: column;
+}
+
+.input {
+    position: relative;
+    width: 300px;
+    border: none;
+    color: var(--text-color);
+    background-color: var(--background-color);
+    padding: 5px 0  10px;
+    font-size: 16px;
+    outline: inherit;
+    transition: border-color 0.3s ease;
+    border-bottom: 2px solid #ccc;
+}
+
+
+input::placeholder{
+    font-family: Inter;
+    font-size: 15px;
+    font-weight: 400;
+    line-height: 20px;
+    letter-spacing: -0.30000001192092896px;
+    text-align: left;
+    text-underline-position: from-font;
+    text-decoration-skip-ink: none;
+}
+
+label{
+    font-family: Inter;
+    font-size: 10px;
+    font-weight: 700;
+    line-height: 12px;
+    letter-spacing: -0.20000000298023224px;
+    text-align: left;
+    text-underline-position: from-font;
+    text-decoration-skip-ink: none;
+}
+.iconEye{
+    margin-left: -20px;
+    position: relative;
+}
+
+.input:focus {
+    border-bottom-color: var(--text-color);
+}
+
+.input.active {
+    border-bottom-color:var(--text-color);
+}
+
+.input:disabled {
+    background-color: transparent;
+    border-bottom-color: #ccc;
+    cursor: not-allowed;
+    opacity: 0.4;
+}
+
+.input.error {
+    border-bottom-color: red;
+}
+
+.errorMessage {
+    color: red;
+    font-size: 14px;
+}

@@ -1,0 +1,24 @@
+.calendar-modal-overlay {
+  position: fixed;
+  top: 60%;
+  left: 3%;
+  display: flex;
+  flex-direction: column;
+  background-color: #FFFFFF;
+  z-index: 1000;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+  width: 300px;
+  height: 310px;
+  box-sizing: border-box;
+}
+
+.calendar-modal-overlay .input{
+  width: 250px;
+}
+
+.calendar-modal-buttons {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 25px;
+}
+

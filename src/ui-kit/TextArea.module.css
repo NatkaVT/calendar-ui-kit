@@ -1,0 +1,37 @@
+.textArea{
+    display: grid;
+    width: 450px;
+    height: 80px;
+    gap: 7px;
+    background-color: var(--background-color);
+    color: var(--text-color);
+}
+
+.textArea label{
+    font-family: Inter;
+    font-size: 10px;
+    font-weight: 700;
+    line-height: 12px;
+    letter-spacing: -0.20000000298023224px;
+    text-align: left;
+    text-underline-position: from-font;
+    text-decoration-skip-ink: none;
+}
+
+.textArea textarea{
+    /* height: 80px; */
+    border: none;
+    border-bottom: 1px solid #737373;
+    outline: transparent;
+    font-family: Inter;
+    font-size: 15px;
+    font-weight: 400;
+    line-height: 20px;
+    letter-spacing: -0.30000001192092896px;
+    text-align: left;
+    text-underline-position: from-font;
+    text-decoration-skip-ink: none;
+    background-color: var(--background-color);
+    color: var(--text-color);
+}
+

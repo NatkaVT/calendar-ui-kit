@@ -1,0 +1,16 @@
+.event-item {
+  position: absolute;
+  left: 2px;
+  right: 2px;
+  top: 2px;
+  bottom: 2px;
+  background-color: #2196F3;
+  color: white;
+  padding: 2px 4px;
+  border-radius: 4px;
+  font-size: 12px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  cursor: pointer;
+}

@@ -1,0 +1,46 @@
+.colorPicker{
+    width: 240px;
+    height: 86px;
+}
+
+.colorPicker h4{
+    font-family: Inter;
+    font-size: 12px;
+    font-weight: 700;
+    text-align: left;
+    text-underline-position: from-font;
+    text-decoration-skip-ink: none;
+    margin-bottom: 10px;
+    color: var(--text-color);
+}
+
+.colorPicker .colorGrid {
+    width: 230px;
+    display: grid;
+    grid-template-columns: repeat(6, 18px);
+    gap: 24px;
+    border: 1px solid #DEDFE5;
+    border-radius: 8px;
+    padding: 10px 5px;
+}
+
+.colorBox {
+    width: 14px;
+    height: 14px;
+    cursor: pointer;
+    transition: border 0.3s;
+    border-radius: 4px;
+}
+
+.colorBoxWrapper {
+    border: 1px solid transparent;
+    padding: 1px 0;
+    display: flex;
+    justify-content: center;
+    box-sizing: border-box;
+}
+
+.selected {
+    border: 1px solid var(--text-color);
+    border-radius: 4px;
+}

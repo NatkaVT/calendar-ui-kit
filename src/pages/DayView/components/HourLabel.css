@@ -1,0 +1,22 @@
+.hour-label-column {
+  width: 50px;
+  border-right: 1px solid #ccc;
+  display: flex;
+  flex-direction: column;
+}
+
+.hour-label-header {
+  height: 60px;
+  border-bottom: 1px solid #ccc;
+  box-shadow: 0px 1px 2px 0px #DEDFE5;
+}
+
+.hour-label-cell {
+  height: 40px;
+  line-height: 40px;
+  text-align: right;
+  padding-right: 5px;
+  font-size: 12px;
+  color: #323749;
+  margin-top: 20px;
+}

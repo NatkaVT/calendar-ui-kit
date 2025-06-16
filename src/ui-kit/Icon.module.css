@@ -1,0 +1,11 @@
+.iconArea{
+    width: 340px;
+    height: 100px;
+    background-color: #CDCDCD;
+    border: 1px dashed #9747FF;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    padding: 10px;
+    border-radius: 8px;
+}

@@ -1,0 +1,11 @@
+.checkbox {
+    display: flex;
+    gap: 20px;
+    color: var(--text-color);
+}
+
+.checkbox input {
+    accent-color: #00AE1C;
+    color: var(--text-color);
+    background-color: var(--background-color);
+}

@@ -1,0 +1,35 @@
+.day-column {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  border-right: 1px solid #DEDFE5;
+}
+
+.day-header {
+  height: 40px;
+  border-bottom: 1px solid #DEDFE5;
+  box-shadow: 0px 1px 2px 0px #DEDFE5;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 0 5px;
+  font-weight: bold;
+}
+
+.current-day {
+  background-color: #DFF5E2;
+}
+
+.hours-column {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+}
+
+.hour-cell {
+  height: 40px;
+  border-bottom: 1px solid #eee;
+  position: relative;
+}
