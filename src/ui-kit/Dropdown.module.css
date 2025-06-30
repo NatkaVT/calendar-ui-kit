@@ -1,3 +1,7 @@
+.dropdown {
+    position: relative;
+}
+
 .dropdown button {
     width: 80px;
     height: 36px;
@@ -29,6 +33,10 @@
 }
 
 .dropdown .menu {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    z-index: 1000;
     width: 80px;
     height: 72px;
     background-color: var(--background-color);

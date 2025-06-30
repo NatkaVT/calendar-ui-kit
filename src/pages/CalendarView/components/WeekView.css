@@ -2,24 +2,28 @@
   flex: 1;
   display: flex;
   flex-direction: column;
-  padding: 10px 50px;
+  padding: 20px 50px;
   overflow: auto;
 }
 
 .week-header {
   display: flex;
-  align-items: center;
+  align-items: left;
   gap: 10px;
   margin-bottom: 10px;
 }
 
-
 .week-grid {
   display: flex;
   flex: 1;
-  border: 1px solid #ccc;
   background-color: #fff;
-  
   height: calc(100vh - 200px);
+  border-radius: 8px;
+}
+
+.scroll-container {
+  display: flex;
+  flex: 1;
+  height: 100%;
   overflow-y: auto;
 }

@@ -1,10 +1,10 @@
 import './App.css';
-import DayView from './pages/DayView/DayView';
+import CalendarView from './pages/CalendarView/CalendarView';
 
 function App() {
   return (
     <div className="App">
-      <DayView />
+      <CalendarView />
     </div>
   );
 }

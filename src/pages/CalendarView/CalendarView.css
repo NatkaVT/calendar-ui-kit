@@ -19,8 +19,8 @@ header{
 }
 
 header .header-logo{
-    display: flex;
-    align-items: center;
+  display: flex;
+  align-items: center;
 }
 
 .header-btn {
@@ -30,59 +30,65 @@ header .header-logo{
 }
 
 header .header-btn .today-btn{
-    width: 60px;
-    height: 36px;
-    color: #FFFFFF;
+  width: 60px;
+  height: 36px;
+  color: #FFFFFF;
 }
 
 header .header-btn .update-btn{
-    width: 36px;
-    height: 36px;
+  width: 36px;
+  height: 36px;
 }
 
 header .header-user-info{
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    position: absolute;
-    right: 50px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  position: absolute;
+  right: 50px;
+}
+
+.header-user-info .switch-option{
+  z-index: 1200;
 }
 
 header .header-user-info .user-profile{
-    display: flex;
+  display: flex;
 }
 
 nav{
-    width: 20%;
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-    padding: 20px 10px 0 50px;
+  width: 20%;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 20px 10px 0 50px;
 }
 
 nav .create-btn{
-    color: #FFFFFF;
-    width: 100%;
-    height: 50px;
-    margin-bottom: 0;
+  color: #FFFFFF;
+  width: 100%;
+  height: 50px;
+  margin-bottom: 0;
 }
 
 nav .update-datepicker{
-    width: 100%;
-    border-radius: 8px;
-    background-color: #FFFFFF;
-    /* --rdp-day-width: 45px;
-    --rdp-day-height: 40px;
-    --rdp-day_button-width: 40px;
-    --rdp-day_button-height: 40px; */
+  width: 100%;
+  border-radius: 8px;
+  background-color: #FFFFFF;
+  position: relative;
+  z-index: 1600;
+  /* --rdp-day-width: 45px;
+  --rdp-day-height: 40px;
+  --rdp-day_button-width: 40px;
+  --rdp-day_button-height: 40px; */
 }
 
 nav .user-calendars{
-    width: 100%;
-    background-color: #FFFFFF;
-    box-shadow: 0px 4px 4px 0px #0000001A;
-    border-radius: 8px;
-    padding: 0 0 10px 10px;
+  width: 100%;
+  background-color: #FFFFFF;
+  box-shadow: 0px 4px 4px 0px #0000001A;
+  border-radius: 8px;
+  padding: 0 0 10px 10px;
 }
 
 .calendar-container{
@@ -113,7 +119,6 @@ nav .user-calendars{
   border: none;
   background-color: inherit;
 }
-
 
 main{
   width: 85%;

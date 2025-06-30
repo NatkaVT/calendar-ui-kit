@@ -7,7 +7,6 @@ const SelectMenu = ({ onChange, value, options, isOpen: initialIsOpen, label, st
 
     const defaultOptions = [];
 
-    // If options prop is not provided, fallback to default hours array
     if (!options) {
         for (let hour = 12; hour < 24; hour++) {
             for (let minute = 0; minute < 60; minute += 15) {
@@ -69,7 +68,7 @@ const SelectMenu = ({ onChange, value, options, isOpen: initialIsOpen, label, st
                             return (
                                 <div
                                     key={key}
-                                    className={`${styles.option} ${isActive ? styles.active : ''} ${index === 2 ? styles.hover : ''}`}
+                                    className={`${styles.option} ${isActive ? styles.active : ''}`}
                                     onClick={() => handleOptionClick(option)}
                                 >
                                     {label}

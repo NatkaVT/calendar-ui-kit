@@ -9,7 +9,7 @@ const addDays = (date, days) => {
   return result;
 };
 
-const WeekView = ({ events, calendars, currentWeekStart }) => {
+const WeekView = ({ events, calendars, currentWeekStart, onEventClick }) => {
   const weekDates = [];
   for (let i = 0; i < 7; i++) {
     weekDates.push(addDays(currentWeekStart, i));
@@ -28,15 +28,18 @@ const WeekView = ({ events, calendars, currentWeekStart }) => {
   return (
     <div className="week-view">
       <div className="week-grid">
-        <HourLabel />
-        {weekDates.map(date => (
-          <DayColumn
-            key={date.toISOString()}
-            date={date}
-            events={eventsForWeek.filter(event => event.date === date.toISOString().slice(0,10))}
-            calendars={calendars}
-          />
-        ))}
+        <div className="scroll-container">
+          <HourLabel />
+          {weekDates.map(date => (
+            <DayColumn
+              key={date.toISOString()}
+              date={date}
+              events={eventsForWeek.filter(event => event.date === date.toISOString().slice(0,10))}
+              calendars={calendars}
+              onEventClick={onEventClick}
+            />
+          ))}
+        </div>
       </div>
     </div>
   );

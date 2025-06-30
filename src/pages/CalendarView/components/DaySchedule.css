@@ -1,0 +1,18 @@
+.day-schedule {
+  display: flex;
+  padding: 20px 50px;
+}
+
+.day-grid{
+  display: flex;
+  width: 100%;
+  background-color: #fff;
+  border-radius: 8px;
+}
+
+.day-header {
+  padding: 10px 0;
+  font-weight: bold;
+  font-size: 18px;
+  border-bottom: 1px solid #ccc;
+}

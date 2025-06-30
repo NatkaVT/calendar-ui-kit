@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPen, faTrash} from '@fortawesome/free-solid-svg-icons';
 import { addCalendar, editCalendar, deleteCalendar, toggleCalendarVisibility } from '../../entities/calendars/calendarsSlice';
-import { addEvent } from '../../entities/events/eventsSlice';
+import { addEvent, editEvent, deleteEvent } from '../../entities/events/eventsSlice';
 import DatePicker from '../../ui-kit/DatePicker';
 import Button from '../../ui-kit/Button';
 import Checkbox from '../../ui-kit/Checkbox';
@@ -11,21 +11,25 @@ import Dropdown from '../../ui-kit/Dropdown';
 import WeekView from './components/WeekView';
 import DaySchedule from './components/DaySchedule';
 import EventModal from './components/EventModal';
+import EventInfoModal from './components/EventInfoModal';
 import CalendarModal from './components/CalendarModal';
 import DeleteConfirmationModal from './components/DeleteConfirmationModal';
 import logo from './logo.png';
-import './DayView.css';
+import './CalendarView.css';
 
 const DayView = () => {
   const dispatch = useDispatch();
   const calendars = useSelector((state) => state.calendars.calendars);
   const events = useSelector((state) => state.events.events);
 
-  const [viewMode, setViewMode] = useState('Week'); // 'Week' or 'Day'
+  const [viewMode, setViewMode] = useState('Week');
   const [currentDate, setCurrentDate] = useState(new Date());
   const [currentWeekStart, setCurrentWeekStart] = useState(getStartOfWeek(new Date()));
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isCalendarModalOpen, setIsCalendarModalOpen] = useState(false);
+
+  const [selectedEvent, setSelectedEvent] = useState(null);
+  const [isInfoModalOpen, setIsInfoModalOpen] = useState(false);
 
   const [editingCalendar, setEditingCalendar] = useState(null);
   const [deletingCalendar, setDeletingCalendar] = useState(null);
@@ -82,25 +86,70 @@ const DayView = () => {
   };
 
   const handleCreateClick = () => {
+    setSelectedEvent(null);
     setIsModalOpen(true);
+  };
+
+  const handleInfoModalClose = () => {
+    setIsInfoModalOpen(false);
+    setSelectedEvent(null);
   };
 
   const handleModalClose = () => {
     setIsModalOpen(false);
+    setSelectedEvent(null);
   };
 
   const handleSaveEvent = (eventData) => {
-    dispatch(addEvent({
-      id: Date.now().toString(),
-      title: eventData.title,
-      date: eventData.date,
-      startTime: eventData.startTime,
-      endTime: eventData.endTime,
-      description: eventData.description,
-      color: eventData.color,
-      calendarId: calendars.length > 0 ? calendars[0].id : null,
-    }));
+    if (selectedEvent) {
+      dispatch(editEvent({
+        ...selectedEvent,
+        title: eventData.title,
+        date: eventData.date,
+        startTime: eventData.startTime,
+        endTime: eventData.endTime,
+        description: eventData.description,
+        color: eventData.color,
+        calendarId: eventData.calendarId || (calendars.length > 0 ? calendars[0].id : null),
+      }));
+    } else {
+      dispatch(addEvent({
+        id: Date.now().toString(),
+        title: eventData.title,
+        date: eventData.date,
+        startTime: eventData.startTime,
+        endTime: eventData.endTime,
+        description: eventData.description,
+        color: eventData.color,
+        calendarId: calendars.length > 0 ? calendars[0].id : null,
+      }));
+    }
     setIsModalOpen(false);
+    setSelectedEvent(null);
+  };
+
+  const handleEventClick = (event) => {
+    setSelectedEvent(event);
+    setIsInfoModalOpen(true);
+  };
+
+  const handleEditClick = () => {
+    setIsInfoModalOpen(false);
+    setIsModalOpen(true);
+  };
+
+  const handleDeleteClick = () => {
+    setIsInfoModalOpen(false);
+    setDeletingCalendar(null);
+    setIsDeleteModalOpen(true);
+  };
+
+  const handleDeleteConfirm = () => {
+    if (selectedEvent) {
+      dispatch(deleteEvent(selectedEvent.id));
+    }
+    setIsDeleteModalOpen(false);
+    setSelectedEvent(null);
   };
 
   const handleCalendarCreateClick = () => {
@@ -133,13 +182,6 @@ const DayView = () => {
     setIsDeleteModalOpen(true);
   };
 
-  const handleDeleteConfirm = () => {
-    if (deletingCalendar) {
-      dispatch(deleteCalendar(deletingCalendar.id));
-    }
-    setIsDeleteModalOpen(false);
-    setDeletingCalendar(null);
-  };
 
   const handleDeleteCancel = () => {
     setIsDeleteModalOpen(false);
@@ -160,7 +202,7 @@ const DayView = () => {
           <h3>{currentWeekStart.toLocaleDateString("en-US", { month: 'long', year: 'numeric' })}</h3>
         </div>
         <div className='header-user-info'>
-          <Dropdown options={['Day', 'Week']} defaultOption={viewMode} onChange={handleViewChange} />
+          <Dropdown options={['Day', 'Week']} defaultOption={viewMode} onChange={handleViewChange} className='switch-option' />
           <div className='user-profile'>
             <h4>Username</h4>
           </div>
@@ -205,6 +247,7 @@ const DayView = () => {
               calendars={calendars}
               currentWeekStart={currentWeekStart}
               setCurrentWeekStart={setCurrentWeekStart}
+        onEventClick={handleEventClick}
             />
           ) : (
             <DaySchedule
@@ -212,6 +255,10 @@ const DayView = () => {
               calendars={calendars}
               date={currentDate}
               setCurrentDate={setCurrentDate}
+              onEventClick={(event) => {
+                setSelectedEvent(event);
+                setIsModalOpen(true);
+              }}
             />
           )}
         </main>
@@ -219,6 +266,14 @@ const DayView = () => {
           isOpen={isModalOpen}
           onClose={handleModalClose}
           onSave={handleSaveEvent}
+          event={selectedEvent}
+        />
+        <EventInfoModal
+          isOpen={isInfoModalOpen}
+          onClose={handleInfoModalClose}
+          event={selectedEvent}
+          onEdit={handleEditClick}
+          onDelete={handleDeleteClick}
         />
         <CalendarModal
           isOpen={isCalendarModalOpen}
