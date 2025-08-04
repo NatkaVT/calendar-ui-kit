@@ -4,7 +4,7 @@ import './DayColumn.css';
 
 const hours = Array.from({ length: 24 }, (_, i) => i);
 
-const DayColumn = ({ date, events, calendars }) => {
+const DayColumn = ({ date, events, calendars, onEventClick }) => {
   const dayName = date.toLocaleDateString('en-US', { weekday: 'short' });
   const dayNumber = date.getDate();
 
@@ -16,7 +16,20 @@ const DayColumn = ({ date, events, calendars }) => {
   };
 
   const parseTimeToMinutes = (timeStr) => {
-    const [hours, minutes] = timeStr.split(':').map(Number);
+    const timeRegex = /^(\d{1,2}):(\d{2})\s?(am|pm)?$/i;
+    const match = timeStr.match(timeRegex);
+    if (!match) {
+      return 0;
+    }
+    let hours = parseInt(match[1], 10);
+    const minutes = parseInt(match[2], 10);
+    const meridiem = match[3] ? match[3].toLowerCase() : null;
+
+    if (meridiem === 'pm' && hours !== 12) {
+      hours += 12;
+    } else if (meridiem === 'am' && hours === 12) {
+      hours = 0;
+    }
     return hours * 60 + minutes;
   };
 
@@ -41,7 +54,7 @@ const DayColumn = ({ date, events, calendars }) => {
           const style = {
             position: 'absolute',
             top: `${top}px`,
-            height: `${height}px`,
+            height:`${height}px`,
             left: '2px',
             right: '2px',
           };
@@ -51,6 +64,7 @@ const DayColumn = ({ date, events, calendars }) => {
               event={event}
               calendar={calendars.find(cal => cal.id === event.calendarId)}
               style={style}
+              onClick={() => onEventClick(event)}
             />
           );
         })}

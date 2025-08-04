@@ -2,26 +2,18 @@ import React, { useState, useRef } from 'react';
 import styles from './SelectMenu.module.css';
 import PropTypes from 'prop-types';
 
-const SelectMenu = ({ onChange, value, options, isOpen: initialIsOpen, label, style }) => {
+const SelectMenu = ({ onChange, value, options, isOpen: initialIsOpen, label, style, error }) => {
     const [isMenuOpen, setIsMenuOpen] = useState(initialIsOpen || false);
 
     const defaultOptions = [];
 
     if (!options) {
-        for (let hour = 12; hour < 24; hour++) {
+        for (let hour = 0; hour < 24; hour++) {
             for (let minute = 0; minute < 60; minute += 15) {
-                const formattedHour = hour < 10 ? `0${hour}` : hour;
-                const formattedMinute = minute < 10 ? '0' : '';
-                const ampm = hour < 12 ? 'am' : 'pm';
-                defaultOptions.push(`${formattedHour}:${formattedMinute}${minute} ${ampm}`);
-            }
-        }
-
-        for (let hour = 0; hour < 12; hour++) {
-            for (let minute = 0; minute < 60; minute += 15) {
-                const formattedHour = hour < 10 ? `0${hour}` : hour;
-                const formattedMinute = minute < 10 ? '0' : '';
-                defaultOptions.push(`${formattedHour}:${formattedMinute}${minute} am`);
+                let displayHour = hour % 12 === 0 ? 12 : hour % 12;
+                let ampm = hour < 12 ? 'am' : 'pm';
+                let formattedMinute = minute < 10 ? `0${minute}` : minute;
+                defaultOptions.push(`${displayHour}:${formattedMinute} ${ampm}`);
             }
         }
     }
@@ -55,8 +47,8 @@ const SelectMenu = ({ onChange, value, options, isOpen: initialIsOpen, label, st
     return (
         <div className={styles.selectMenu} ref={selectRef} style={style}>
             {label && <label htmlFor='time-select'>{label}</label>}
-            <div className={styles.customSelect} onClick={handleSelectClick}>
-                <div className={`${styles.selectedValue} ${styles.hover}`}>
+            <div className={`${styles.customSelect} ${error ? styles.error : ''}`} onClick={handleSelectClick}>
+                <div className={`${styles.selectedValue} ${styles.hover} ${error ? styles.error : ''}`}>
                     {displayLabel()}
                 </div>
                 {isMenuOpen && (

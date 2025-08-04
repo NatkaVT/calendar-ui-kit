@@ -7,8 +7,7 @@
     box-shadow: 0px 16px 50px 0px #0000003D;
     background-color:var(--background-color);
     color: var(--text-color);
-    border-top-left-radius: 8px;
-    border-top-right-radius: 8px;
+    border-radius: 8px;
     padding: 0 10px;
     font-family: Inter;
     font-size: 15px;
@@ -18,12 +17,32 @@
     text-align: left;
     text-underline-position: from-font;
     text-decoration-skip-ink: none;
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 3000;
+    animation: slideUp 0.3s ease-out;
+}
 
+@keyframes slideUp {
+    from {
+        transform: translate(-50%, 100%);
+        opacity: 0;
+    }
+    to {
+        transform: translate(-50%, 0);
+        opacity: 1;
+    }
 }
 
 .toast button{
     background-color: inherit;
     border: none;
     color: var(--text-color);
+    cursor: pointer;
+    font-size: 16px;
+    padding: 0;
+    margin-left: 10px;
 }
 

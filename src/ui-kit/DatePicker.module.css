@@ -1,5 +1,5 @@
 .datePicker{
-    width: 250px;
+    /* width: 300px; */
     position: absolute;
 }
 
@@ -32,6 +32,7 @@
     --rdp-day_button-height: 30px;
     --rdp-weekday-opacity: 1;
     --rdp-outside-opacity: 0.5;
-    /* --rdp-dropdown-gap: 1rem; */
+    display: flex;
+    flex-direction: row;
 }
 

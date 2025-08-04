@@ -7,7 +7,7 @@ const initialState = {
     {
       id: defaultCalendarId,
       name: 'Calendar 1',
-      color: '#1976d2',
+      color: '#4254AF',
       visible: true,
       isDefault: true,
     },

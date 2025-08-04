@@ -24,6 +24,10 @@ label {
     outline: transparent;
 }
 
+.selectMenu .selectedValue.error {
+    border-bottom-color: red;
+}
+
 .selectMenu .options {
     max-height: 200px;
     width: 100%;

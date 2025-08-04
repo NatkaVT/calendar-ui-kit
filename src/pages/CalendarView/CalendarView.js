@@ -8,6 +8,7 @@ import DatePicker from '../../ui-kit/DatePicker';
 import Button from '../../ui-kit/Button';
 import Checkbox from '../../ui-kit/Checkbox';
 import Dropdown from '../../ui-kit/Dropdown';
+import Toast from '../../ui-kit/Toast';
 import WeekView from './components/WeekView';
 import DaySchedule from './components/DaySchedule';
 import EventModal from './components/EventModal';
@@ -34,6 +35,8 @@ const DayView = () => {
   const [editingCalendar, setEditingCalendar] = useState(null);
   const [deletingCalendar, setDeletingCalendar] = useState(null);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [toastMessage, setToastMessage] = useState('');
+  const [isToastVisible, setIsToastVisible] = useState(false);
 
   function getStartOfWeek(date) {
     const day = date.getDay();
@@ -97,20 +100,27 @@ const DayView = () => {
 
   const handleModalClose = () => {
     setIsModalOpen(false);
-    setSelectedEvent(null);
   };
+
+  React.useEffect(() => {
+    if (!isModalOpen) {
+      setSelectedEvent(null);
+    }
+  }, [isModalOpen]);
 
   const handleSaveEvent = (eventData) => {
     if (selectedEvent) {
       dispatch(editEvent({
-        ...selectedEvent,
-        title: eventData.title,
-        date: eventData.date,
-        startTime: eventData.startTime,
-        endTime: eventData.endTime,
-        description: eventData.description,
-        color: eventData.color,
-        calendarId: eventData.calendarId || (calendars.length > 0 ? calendars[0].id : null),
+        id: selectedEvent.id,
+        updates: {
+          title: eventData.title,
+          date: eventData.date,
+          startTime: eventData.startTime,
+          endTime: eventData.endTime,
+          description: eventData.description,
+          color: eventData.color,
+          calendarId: eventData.calendarId || (calendars.length > 0 ? calendars[0].id : null),
+        }
       }));
     } else {
       dispatch(addEvent({
@@ -121,7 +131,7 @@ const DayView = () => {
         endTime: eventData.endTime,
         description: eventData.description,
         color: eventData.color,
-        calendarId: calendars.length > 0 ? calendars[0].id : null,
+        calendarId: eventData.calendarId || (calendars.length > 0 ? calendars[0].id : null),
       }));
     }
     setIsModalOpen(false);
@@ -129,12 +139,26 @@ const DayView = () => {
   };
 
   const handleEventClick = (event) => {
-    setSelectedEvent(event);
+    const calendar = calendars.find(cal => cal.id === event.calendarId);
+    
+    const enrichedEvent = {
+      ...event,
+      calendarName: calendar ? calendar.name : 'N/A',
+      calendarColor: calendar ? calendar.color : '#000000',
+      date: event.date || '',
+      startTime: event.startTime || '',
+      endTime: event.endTime || '',
+      calendarId: event.calendarId,
+      color: calendar ? calendar.color : '#4254AF',
+      repeat: event.repeat || null,
+    };
+    setSelectedEvent(enrichedEvent);
     setIsInfoModalOpen(true);
   };
 
   const handleEditClick = () => {
     setIsInfoModalOpen(false);
+    setSelectedEvent(selectedEvent);
     setIsModalOpen(true);
   };
 
@@ -148,8 +172,12 @@ const DayView = () => {
     if (selectedEvent) {
       dispatch(deleteEvent(selectedEvent.id));
     }
+    if (deletingCalendar) {
+      dispatch(deleteCalendar(deletingCalendar.id));
+    }
     setIsDeleteModalOpen(false);
     setSelectedEvent(null);
+    setDeletingCalendar(null);
   };
 
   const handleCalendarCreateClick = () => {
@@ -211,7 +239,7 @@ const DayView = () => {
       <div className='calendar-container'>
         <nav>
           <Button onClick={handleCreateClick} variant='primary' className='create-btn'>Create</Button>
-          <DatePicker selectedDate={currentDate} onChange={setCurrentDate} className='update-datepicker custom-datepicker'/>
+          <DatePicker selectedDate={currentDate} onChange={setCurrentDate} className='update-datepicker'/>
           <div className='user-calendars'>
             <div className='title-user-calendars'>
               <h3>My calendars</h3>
@@ -226,16 +254,16 @@ const DayView = () => {
                   color={calendar.color}
                   disabled={calendar.isDefault}
                 />
-                {!calendar.isDefault && (
-                  <div className="calendar-actions">
+                <div className="calendar-actions">
+                  {!calendar.isDefault && (
                     <button className="delete-btn" onClick={() => handleDeleteCalendar(calendar)}>
                       <FontAwesomeIcon icon={faTrash} style={{ color: '#323749' }} />
                     </button>
-                    <button className="edit-btn" onClick={() => handleEditCalendar(calendar)}>
-                      <FontAwesomeIcon icon={faPen} style={{ color: '#323749' }} />
-                    </button>
-                  </div>
-                )}
+                  )}
+                  <button className="edit-btn" onClick={() => handleEditCalendar(calendar)}>
+                    <FontAwesomeIcon icon={faPen} style={{ color: '#323749' }} />
+                  </button>
+                </div>
               </div>
             ))}
           </div>
@@ -247,7 +275,7 @@ const DayView = () => {
               calendars={calendars}
               currentWeekStart={currentWeekStart}
               setCurrentWeekStart={setCurrentWeekStart}
-        onEventClick={handleEventClick}
+              onEventClick={handleEventClick}
             />
           ) : (
             <DaySchedule
@@ -286,7 +314,13 @@ const DayView = () => {
           isOpen={isDeleteModalOpen}
           onConfirm={handleDeleteConfirm}
           onCancel={handleDeleteCancel}
-          calendarName={deletingCalendar ? deletingCalendar.name : ''}
+          itemName={deletingCalendar ? deletingCalendar.name : (selectedEvent ? selectedEvent.title : '')}
+          itemType={deletingCalendar ? 'calendar' : 'event'}
+        />
+        <Toast
+          message={toastMessage}
+          isVisible={isToastVisible}
+          onClose={() => setIsToastVisible(false)}
         />
       </div>
     </div>

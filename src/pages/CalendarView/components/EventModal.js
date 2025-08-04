@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import TextArea from '../../../ui-kit/TextArea'
 import DatePicker from '../../../ui-kit/DatePicker';
@@ -11,7 +11,7 @@ import { faSquare } from '@fortawesome/free-solid-svg-icons';
 import './EventModal.css';
 import Inputs from '../../../ui-kit/Inputs';
 
-const EventModal = ({ isOpen, onClose, onSave }) => {
+const EventModal = ({ isOpen, onClose, onSave, event }) => {
   const [title, setTitle] = useState('');
   const [date, setDate] = useState(null);
   const [inputValue, setInputValue] = useState('');
@@ -21,10 +21,51 @@ const EventModal = ({ isOpen, onClose, onSave }) => {
   const [description, setDescription] = useState('');
   const calendars = useSelector(state => state.calendars.calendars);
   const [selectedCalendarId, setSelectedCalendarId] = useState(calendars.length > 0 ? calendars[0].id : null);
-  const [color, setColor] = useState(calendars.length > 0 ? calendars[0].color : '#000000');
+  const [color, setColor] = useState(calendars.length > 0 ? calendars[0].color : '');
+
+  const [errors, setErrors] = useState({});
+
 
   const [repeatEnabled, setRepeatEnabled] = useState(false);
   const [repeatType, setRepeatType] = useState('Does not repeat');
+
+  useEffect(() => {
+    if (event) {
+      setTitle(event.title || '');
+      if (event.date) {
+        const eventDate = new Date(event.date);
+        setDate(eventDate);
+        setInputValue(eventDate.toLocaleDateString("en-US", { weekday: 'long', month: 'long', day: 'numeric' }));
+      } else {
+        setDate(null);
+        setInputValue('');
+      }
+      setStartTime(event.startTime || '');
+      setEndTime(event.endTime || '');
+      setDescription(event.description || '');
+      setSelectedCalendarId(event.calendarId || (calendars.length > 0 ? calendars[0].id : null));
+      const calendar = calendars.find(cal => cal.id === event.calendarId);
+      setColor(calendar ? calendar.color : (calendars.length > 0 ? calendars[0].color : '#000000'));
+      if (event.repeat) {
+        setRepeatEnabled(true);
+        setRepeatType(event.repeat.type || 'Does not repeat');
+      } else {
+        setRepeatEnabled(false);
+        setRepeatType('Does not repeat');
+      }
+    } else {
+      setTitle('');
+      setDate(null);
+      setInputValue('');
+      setStartTime('');
+      setEndTime('');
+      setDescription('');
+      setSelectedCalendarId(calendars.length > 0 ? calendars[0].id : null);
+      setColor(calendars.length > 0 ? calendars[0].color : '');
+      setRepeatEnabled(false);
+      setRepeatType('Does not repeat');
+    }
+  }, [event, calendars]);
 
   const getWeekday = (date) => {
     if (!date) return '';
@@ -37,14 +78,20 @@ const EventModal = ({ isOpen, onClose, onSave }) => {
   };
 
   const handleSave = () => {
-    if (!title || !date || !startTime || !endTime) {
-      alert('Please fill in title, date, start time, and end time.');
+    const newErrors = {};
+    if (!title) newErrors.title = 'Title is required';
+    if (!date) newErrors.date = 'Date is required';
+    if (!startTime) newErrors.startTime = 'Start time is required';
+    if (!endTime) newErrors.endTime = 'End time is required';
+    if (startTime && endTime && startTime >= endTime) newErrors.endTime = 'End time must be after start time';
+
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
       return;
     }
-    if (startTime >= endTime) {
-      alert('End time must be after start time.');
-      return;
-    }
+
+    setErrors({});
+
     const repeatInfo = repeatEnabled ? {
       type: repeatType,
     } : null;
@@ -83,23 +130,27 @@ const EventModal = ({ isOpen, onClose, onSave }) => {
 
   return (
     <Modal
-    title='Create Event'
-    isOpen={isOpen}
-    onClose={onClose}
-    className="modal-overlay"
+      title={event ? 'Edit Event' : 'Create Event'}
+      isOpen={isOpen}
+      onClose={onClose}
+      className="modal-overlay"
     >
       <div className='modal-content'>
         <Inputs
-        label='Title'
-        type='text'
-        title={title}
-        onChange={e => setTitle(e.target.value)}
-        placeholder='Enter title'
-        className='event-input'
+          label='Title'
+          type='text'
+          value={title}
+          onChange={e => {
+            setTitle(e.target.value);
+            setErrors(prev => ({ ...prev, title: false }));
+          }}
+          placeholder='Enter title'
+          className='event-input'
+          error={errors.title ? true : false}
         />
         <div className='data-time-area'>
           <div className='data-area'>
-            <Inputs
+          <Inputs
               label='Data'
               type="text"
               className="date-input"
@@ -107,9 +158,11 @@ const EventModal = ({ isOpen, onClose, onSave }) => {
               onChange={e => {
                 const newValue = e.target.value;
                 setInputValue(newValue);
+                setErrors(prev => ({ ...prev, date: false }));
               }}
               value={inputValue}
               placeholder="Select date"
+              error={errors.date ? true : false}
             />
             {isDatePickerOpen && (
               <DatePicker
@@ -119,9 +172,9 @@ const EventModal = ({ isOpen, onClose, onSave }) => {
             )}
           </div>
           <div className='time-area'>
-            <SelectMenu label='Time' selected={startTime} onChange={setStartTime} />
+            <SelectMenu label='Time' value={startTime} onChange={setStartTime} error={errors.startTime ? true : false} />
             <span>-</span>
-            <SelectMenu label='Time' selected={endTime} onChange={setEndTime} />
+            <SelectMenu label='Time' value={endTime} onChange={setEndTime} error={errors.endTime ? true : false} />
           </div>
         </div>
         <div className='repeat-area'>
@@ -174,3 +227,4 @@ const EventModal = ({ isOpen, onClose, onSave }) => {
 };
 
 export default EventModal;
+

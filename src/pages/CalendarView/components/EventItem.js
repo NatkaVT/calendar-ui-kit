@@ -2,7 +2,7 @@ import React from 'react';
 import './EventItem.css';
 
 const EventItem = ({ event, calendar, style, onClick }) => {
-  const color = event.color || (calendar ? calendar.color : '#999');
+  const color = event.color || (calendar ? calendar.color : '#4254AF');
 
   return (
     <div className="event-item" style={{ backgroundColor: color, ...style }} onClick={onClick}>

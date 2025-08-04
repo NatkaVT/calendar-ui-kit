@@ -13,10 +13,8 @@
 
 .hour-label-cell {
   height: 80px;
-  line-height: 80px;
   text-align: right;
   padding-right: 5px;
   font-size: 12px;
   color: #323749;
-  margin-top: 0;
 }

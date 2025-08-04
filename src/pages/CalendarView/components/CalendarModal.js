@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import ColorPicker from '../../../ui-kit/ColorPicker';
 import Modal from '../../../ui-kit/Modal';
 import Button from '../../../ui-kit/Button';
@@ -20,7 +20,7 @@ const defaultColors = [
   '#8332A4'
 ];
 
-const CalendarModal = ({ isOpen, onClose, onSave }) => {
+const CalendarModal = ({ isOpen, onClose, onSave, initialName, initialColor }) => {
   const [name, setName] = useState('');
   const [color, setColor] = useState(defaultColors[0]);
 
@@ -40,11 +40,18 @@ const CalendarModal = ({ isOpen, onClose, onSave }) => {
     onClose();
   };
 
+  useEffect(() => {
+    setName(initialName || '');
+    setColor(initialColor || defaultColors[0]);
+  }, [initialName, initialColor, isOpen]);
+
   if (!isOpen) return null;
+
+  const isEditing = initialName && initialName.trim() !== '';
 
   return (
     <Modal
-    title='Create calendar'
+    title={isEditing ? 'Edit calendar' : 'Create calendar'}
     onClose={handleClose}
     isOpen={isOpen}
     onClick={e => e.stopPropagation()}

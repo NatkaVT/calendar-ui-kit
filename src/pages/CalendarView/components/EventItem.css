@@ -1,10 +1,6 @@
 .event-item {
-  position: absolute;
-  left: 2px;
-  right: 2px;
-  top: 2px;
-  bottom: 2px;
-  background-color: #2196F3;
+  background-color: #4254AF;
+  opacity: 0.5;
   color: white;
   padding: 2px 4px;
   border-radius: 4px;
@@ -13,4 +9,5 @@
   white-space: nowrap;
   text-overflow: ellipsis;
   cursor: pointer;
+  border-left: 3px #4254AF solid;
 }

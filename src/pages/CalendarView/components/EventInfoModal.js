@@ -2,36 +2,31 @@ import React from 'react';
 import Modal from '../../../ui-kit/Modal';
 import Button from '../../../ui-kit/Button';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPen, faTrash, faTimes } from '@fortawesome/free-solid-svg-icons';
+import { faPen, faTrash, faT, faCalendarDays, faBarsStaggered, faSquare } from '@fortawesome/free-solid-svg-icons';
+import { faClock } from '@fortawesome/free-regular-svg-icons';
 import './EventInfoModal.css';
 
 const EventInfoModal = ({ isOpen, onClose, event, onEdit, onDelete }) => {
   if (!isOpen || !event) return null;
 
   const formatDateRange = () => {
-    const startDate = new Date(event.date + 'T' + event.startTime);
-    const endDate = new Date(event.date + 'T' + event.endTime);
+    if (!event.date || !event.startTime || !event.endTime) {
+      return 'N/A';
+    }
+    const dateObj = new Date(event.date);
+    if (isNaN(dateObj.getTime())) {
+      return 'N/A';
+    }
     const optionsDate = { weekday: 'long', month: 'long', day: 'numeric' };
-    const optionsTime = { hour: '2-digit', minute: '2-digit' };
-    const dateStr = startDate.toLocaleDateString('en-US', optionsDate);
-    const startTimeStr = startDate.toLocaleTimeString('en-US', optionsTime);
-    const endTimeStr = endDate.toLocaleTimeString('en-US', optionsTime);
-    return `${dateStr}, ${startTimeStr} - ${endTimeStr}`;
+    const formattedDate = dateObj.toLocaleDateString('en-US', optionsDate);
+    return `${formattedDate}, ${event.startTime} - ${event.endTime}`;
   };
 
   return (
     <Modal
-      title="Event information"
-      isOpen={isOpen}
-      onClose={onClose}
-      className="event-info-modal-overlay"
-    >
-      <div className="event-info-content">
-        <button className="close-btn" onClick={onClose} aria-label="Close">
-          <FontAwesomeIcon icon={faTimes} />
-        </button>
-        <div className="event-info-header">
-          <h2 className="event-title">{event.title}</h2>
+      title={
+        <div className="modal-title-with-actions">
+          <span>Event information</span>
           <div className="event-actions">
             <Button variant="icon" onClick={onEdit} aria-label="Edit event">
               <FontAwesomeIcon icon={faPen} />
@@ -41,9 +36,19 @@ const EventInfoModal = ({ isOpen, onClose, event, onEdit, onDelete }) => {
             </Button>
           </div>
         </div>
+      }
+      isOpen={isOpen}
+      onClose={onClose}
+      className="event-info-modal-overlay"
+    >
+      <div className="event-info-content">
+        <div className="event-info-header">
+          <FontAwesomeIcon icon={faT} size='sm' color='#5B5F6E'/>
+          <h4 className="event-title">{event.title}</h4>
+        </div>
         <div className="event-info-details">
           <div className="event-info-row">
-            <FontAwesomeIcon icon={faTimes} style={{ visibility: 'hidden' }} />
+            <FontAwesomeIcon icon={faClock} size='sm' color='#5B5F6E'/>
             <span>{formatDateRange()}</span>
           </div>
           {event.repeat && event.repeat.type && (
@@ -52,9 +57,14 @@ const EventInfoModal = ({ isOpen, onClose, event, onEdit, onDelete }) => {
             </div>
           )}
           <div className="event-info-row">
-            <span>Calendar: {event.calendarName || 'N/A'}</span>
+            <FontAwesomeIcon icon={faCalendarDays} size='sm' color='#5B5F6E'/>
+            <span style={{display:'flex', alignItems:'center', gap:'8px'}}>
+              <FontAwesomeIcon icon={faSquare} color={event.calendarColor} size="sm" />
+              {event.calendarName || 'N/A'}
+              </span>
           </div>
           <div className="event-info-row description">
+            <FontAwesomeIcon icon={faBarsStaggered} size='sm' color='#5B5F6E'/>
             <span>{event.description || 'No description'}</span>
           </div>
         </div>
