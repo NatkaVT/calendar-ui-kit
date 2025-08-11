@@ -17,7 +17,7 @@ header{
   padding: 0 50px;
   background-color: #FFFFFF;
   box-shadow: 0px 4px 4px 0px #0000001A;
-  /* margin-bottom: 20px; */
+
 }
 
 header .header-logo{
@@ -147,14 +147,5 @@ main{
   width: 85%;
   height: 90vh;
   overflow-y: scroll;
-  /* margin-top: 20px; */
-  /* margin-bottom: 20px; */
 }
 
-/* main::-webkit-scrollbar{
-  height: 100vh;
-}
-
-main::-webkit-scrollbar-track{
-  background-color: inherit;
-} */

@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
+import { getEventsForDateRange } from '../../utils/eventRepetition';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPen, faTrash} from '@fortawesome/free-solid-svg-icons';
 import { addCalendar, editCalendar, deleteCalendar, toggleCalendarVisibility } from '../../entities/calendars/calendarsSlice';
@@ -271,7 +272,11 @@ const DayView = () => {
         <main>
           {viewMode === 'Week' ? (
             <WeekView
-              events={events}
+              events={getEventsForDateRange(
+                events.filter(event => calendars.filter(cal => cal.visible).map(cal => cal.id).includes(event.calendarId)),
+                new Date(currentWeekStart),
+                new Date(new Date(currentWeekStart).setDate(new Date(currentWeekStart).getDate() + 7))
+              )}
               calendars={calendars}
               currentWeekStart={currentWeekStart}
               setCurrentWeekStart={setCurrentWeekStart}
@@ -279,7 +284,11 @@ const DayView = () => {
             />
           ) : (
             <DaySchedule
-              events={events}
+              events={getEventsForDateRange(
+                events.filter(event => calendars.filter(cal => cal.visible).map(cal => cal.id).includes(event.calendarId)),
+                new Date(currentDate),
+                new Date(currentDate)
+              )}
               calendars={calendars}
               date={currentDate}
               setCurrentDate={setCurrentDate}

@@ -23,7 +23,9 @@
 
 .scroll-container {
   display: flex;
+  flex-direction: row;
   flex: 1;
   height: 100%;
   overflow-y: auto;
+  align-items: stretch;
 }

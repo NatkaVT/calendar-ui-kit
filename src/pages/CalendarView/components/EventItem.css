@@ -1,13 +1,9 @@
 .event-item {
-  background-color: #4254AF;
-  opacity: 0.5;
   color: white;
-  padding: 2px 4px;
   border-radius: 4px;
   font-size: 12px;
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
   cursor: pointer;
-  border-left: 3px #4254AF solid;
 }

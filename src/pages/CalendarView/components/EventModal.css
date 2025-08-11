@@ -9,6 +9,7 @@
   width: 525px;
   height: 500px;
   box-sizing: border-box;
+  z-index: 2000;
 }
 
 .modal-overlay .modal-content {

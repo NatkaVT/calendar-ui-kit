@@ -92,7 +92,7 @@ const EventModal = ({ isOpen, onClose, onSave, event }) => {
 
     setErrors({});
 
-    const repeatInfo = repeatEnabled ? {
+    const repeatInfo = repeatEnabled && repeatType !== 'Does not repeat' ? {
       type: repeatType,
     } : null;
 
@@ -191,6 +191,7 @@ const EventModal = ({ isOpen, onClose, onSave, event }) => {
               { value: 'Annually on', label: `Annually on ${getMonthDay(date)}` },
             ]}
             style={ {width: '150px'} }
+            disabled={!repeatEnabled}
           />
         </div>
         <div className='calendar-select-area'>
