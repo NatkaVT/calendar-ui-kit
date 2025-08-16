@@ -50,6 +50,10 @@
   width: 240px;
 }
 
+.data-time-area .modal-calendar .rdp-nav {
+ padding: 0;
+}
+
 .repeat-area{
   display: flex;
   gap: 30px;

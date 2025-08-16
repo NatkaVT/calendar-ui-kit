@@ -67,6 +67,12 @@ const EventModal = ({ isOpen, onClose, onSave, event }) => {
     }
   }, [event, calendars]);
 
+  useEffect(() => {
+    if (!isOpen) {
+      setErrors({});
+    }
+  }, [isOpen]);
+
   const getWeekday = (date) => {
     if (!date) return '';
     return date.toLocaleDateString("en-US", { weekday: 'long' });

@@ -59,7 +59,7 @@ header .header-user-info .user-profile{
 }
 
 nav{
-  width: 20%;
+  width: 17%;
   height: 100vh;
   display: grid;
   grid-template-rows: repeat(5, 15%);
@@ -75,15 +75,23 @@ nav .create-btn{
 }
 
 nav .update-datepicker{
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   border-radius: 8px;
   position: relative;
   z-index: 1600;
   grid-row: 3/4;
-  margin-top: -180px;
-  --rdp-day-width: 45px;
+  margin-top: -210px;
+  /* --rdp-day-width: 45px;
   --rdp-day-height: 40px;
   --rdp-day_button-width: 40px;
-  --rdp-day_button-height: 40px;
+  --rdp-day_button-height: 40px; */
+}
+
+nav .update-datepicker .rdp-nav{
+  padding: 0;
 }
 
 nav .user-calendars{

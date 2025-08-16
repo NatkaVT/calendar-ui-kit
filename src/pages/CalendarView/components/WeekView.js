@@ -9,6 +9,10 @@ const addDays = (date, days) => {
   return result;
 };
 
+const formatDate = (date) => {
+  return date.toISOString().slice(0, 10);
+};
+
 const WeekView = ({ events, calendars, currentWeekStart, onEventClick }) => {
   const weekDates = [];
   for (let i = 0; i < 7; i++) {
@@ -24,7 +28,7 @@ const WeekView = ({ events, calendars, currentWeekStart, onEventClick }) => {
             <DayColumn
               key={date.toISOString()}
               date={date}
-              events={events.filter(event => event.date === date.toISOString().slice(0,10))}
+              events={events.filter(event => event.date === formatDate(date))}
               calendars={calendars}
               onEventClick={onEventClick}
             />

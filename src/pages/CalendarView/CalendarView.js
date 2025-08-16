@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { getEventsForDateRange } from '../../utils/eventRepetition';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -31,6 +31,8 @@ const DayView = () => {
   const [isCalendarModalOpen, setIsCalendarModalOpen] = useState(false);
 
   const [selectedEvent, setSelectedEvent] = useState(null);
+  
+
   const [isInfoModalOpen, setIsInfoModalOpen] = useState(false);
 
   const [editingCalendar, setEditingCalendar] = useState(null);
@@ -101,9 +103,10 @@ const DayView = () => {
 
   const handleModalClose = () => {
     setIsModalOpen(false);
+    setSelectedEvent(null);
   };
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (!isModalOpen) {
       setSelectedEvent(null);
     }
@@ -121,11 +124,11 @@ const DayView = () => {
           description: eventData.description,
           color: eventData.color,
           calendarId: eventData.calendarId || (calendars.length > 0 ? calendars[0].id : null),
+          repeat: eventData.repeat,
         }
       }));
     } else {
       dispatch(addEvent({
-        id: Date.now().toString(),
         title: eventData.title,
         date: eventData.date,
         startTime: eventData.startTime,
@@ -133,6 +136,7 @@ const DayView = () => {
         description: eventData.description,
         color: eventData.color,
         calendarId: eventData.calendarId || (calendars.length > 0 ? calendars[0].id : null),
+        repeat: eventData.repeat,
       }));
     }
     setIsModalOpen(false);
@@ -140,18 +144,24 @@ const DayView = () => {
   };
 
   const handleEventClick = (event) => {
-    const calendar = calendars.find(cal => cal.id === event.calendarId);
+    // Якщо це повторювана подія, знаходимо оригінальну подію
+    let originalEvent = event;
+    if (event.originalEventId) {
+      originalEvent = events.find(e => e.id === event.originalEventId) || event;
+    }
+    
+    const calendar = calendars.find(cal => cal.id === originalEvent.calendarId);
     
     const enrichedEvent = {
-      ...event,
+      ...originalEvent,
       calendarName: calendar ? calendar.name : 'N/A',
       calendarColor: calendar ? calendar.color : '#000000',
-      date: event.date || '',
-      startTime: event.startTime || '',
-      endTime: event.endTime || '',
-      calendarId: event.calendarId,
+      date: event.date || originalEvent.date || '', // Використовуємо дату клікнутої події
+      startTime: originalEvent.startTime || '',
+      endTime: originalEvent.endTime || '',
+      calendarId: originalEvent.calendarId,
       color: calendar ? calendar.color : '#4254AF',
-      repeat: event.repeat || null,
+      repeat: originalEvent.repeat || null,
     };
     setSelectedEvent(enrichedEvent);
     setIsInfoModalOpen(true);
@@ -159,7 +169,6 @@ const DayView = () => {
 
   const handleEditClick = () => {
     setIsInfoModalOpen(false);
-    setSelectedEvent(selectedEvent);
     setIsModalOpen(true);
   };
 
@@ -172,13 +181,13 @@ const DayView = () => {
   const handleDeleteConfirm = () => {
     if (selectedEvent) {
       dispatch(deleteEvent(selectedEvent.id));
+      setSelectedEvent(null);
     }
     if (deletingCalendar) {
       dispatch(deleteCalendar(deletingCalendar.id));
+      setDeletingCalendar(null);
     }
     setIsDeleteModalOpen(false);
-    setSelectedEvent(null);
-    setDeletingCalendar(null);
   };
 
   const handleCalendarCreateClick = () => {
@@ -292,10 +301,7 @@ const DayView = () => {
               calendars={calendars}
               date={currentDate}
               setCurrentDate={setCurrentDate}
-              onEventClick={(event) => {
-                setSelectedEvent(event);
-                setIsModalOpen(true);
-              }}
+              onEventClick={handleEventClick}
             />
           )}
         </main>

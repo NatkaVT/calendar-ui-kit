@@ -2,7 +2,7 @@ import React from 'react';
 import Modal from '../../../ui-kit/Modal';
 import Button from '../../../ui-kit/Button';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPen, faTrash, faT, faCalendarDays, faBarsStaggered, faSquare, faRepeat } from '@fortawesome/free-solid-svg-icons';
+import { faPen, faTrash, faT, faCalendarDays, faBarsStaggered, faSquare } from '@fortawesome/free-solid-svg-icons';
 import { faClock } from '@fortawesome/free-regular-svg-icons';
 import './EventInfoModal.css';
 
@@ -20,6 +20,34 @@ const EventInfoModal = ({ isOpen, onClose, event, onEdit, onDelete }) => {
     const optionsDate = { weekday: 'long', month: 'long', day: 'numeric' };
     const formattedDate = dateObj.toLocaleDateString('en-US', optionsDate);
     return `${formattedDate}, ${event.startTime} - ${event.endTime}`;
+  };
+
+  const getWeekday = (date) => {
+    if (!date) return '';
+    return new Date(date).toLocaleDateString("en-US", { weekday: 'long' });
+  };
+
+  const getMonthDay = (date) => {
+    if (!date) return '';
+    return new Date(date).toLocaleDateString("en-US", { month: 'long', day: 'numeric' });
+  };
+
+  const getRepeatDisplayText = () => {
+    if (!event.repeat || !event.repeat.type || event.repeat.type === 'Does not repeat') {
+      return 'Does not repeat';
+    }
+    
+    const isAllDay = !event.startTime || !event.endTime;
+    const allDayPrefix = isAllDay ? 'All day, ' : '';
+
+    switch (event.repeat.type) {
+      case 'Weekly on':
+        return `${allDayPrefix}Weekly on ${getWeekday(event.date)}`;
+      case 'Annually on':
+        return `${allDayPrefix}Annually on ${getMonthDay(event.date)}`;
+      default:
+        return `${allDayPrefix}${event.repeat.type}`;
+    }
   };
 
   return (
@@ -49,14 +77,14 @@ const EventInfoModal = ({ isOpen, onClose, event, onEdit, onDelete }) => {
         <div className="event-info-details">
           <div className="event-info-row">
             <FontAwesomeIcon icon={faClock} size='sm' color='#5B5F6E'/>
-            <span>{formatDateRange()}</span>
-          </div>
-          {event.repeat && event.repeat.type && event.repeat.type !== 'Does not repeat' && (
-            <div className="event-info-row">
-              <FontAwesomeIcon icon={faRepeat} size='sm' color='#5B5F6E'/>
-              <span>{event.repeat.type}</span>
+            <div className="event-info-text">
+              <span>{formatDateRange()}</span>
+              {event.repeat && event.repeat.type && event.repeat.type !== 'Does not repeat' && (
+                <span>{getRepeatDisplayText()}</span>
+              )}
             </div>
-          )}
+            
+          </div>
           <div className="event-info-row">
             <FontAwesomeIcon icon={faCalendarDays} size='sm' color='#5B5F6E'/>
             <span style={{display:'flex', alignItems:'center', gap:'8px'}}>
