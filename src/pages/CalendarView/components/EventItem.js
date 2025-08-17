@@ -4,6 +4,18 @@ import './EventItem.css';
 const EventItem = ({ event, calendar, style, onClick }) => {
   const color = event.color || (calendar ? calendar.color : '#4254AF');
 
+  const formatTimeDisplay = () => {
+    if (!event.startTime || !event.endTime) {
+      return event.startTime || event.endTime || '';
+    }
+    
+    if (event.startTime === event.endTime) {
+      return event.startTime;
+    }
+    
+    return `${event.startTime} - ${event.endTime}`;
+  };
+
   return (
     <div 
       className="event-item" 
@@ -25,7 +37,7 @@ const EventItem = ({ event, calendar, style, onClick }) => {
         }}
       />
       <div className="event-title">{event.title}</div>
-      <div className="event-time">{event.startTime} - {event.endTime}</div>
+      <div className="event-time">{formatTimeDisplay()}</div>
     </div>
   );
 };

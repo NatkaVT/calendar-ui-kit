@@ -114,11 +114,12 @@ const DayColumn = ({ date, events, calendars, onEventClick, sharedHeaderHeight }
           return timeEvents.map((event, index) => {
             const endMinutes = parseTimeToMinutes(event.endTime);
             const top = startMinutes * pixelsPerMinute;
-            const height = (endMinutes - startMinutes) * pixelsPerMinute;
+            const duration = endMinutes - startMinutes;
+            const height = duration === 0 ? 20 : duration * pixelsPerMinute;
             
             const eventWidth = 100 / totalEvents;
-            const leftOffset = (eventWidth * index) + (2 / totalEvents);
-            const rightOffset = 100 - (eventWidth * (index + 1)) + (2 / totalEvents);
+            const leftOffset = (eventWidth * index);
+            const rightOffset = 100 - (eventWidth * (index + 1));
             
             const style = {
               position: 'absolute',

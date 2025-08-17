@@ -19,7 +19,15 @@ const EventInfoModal = ({ isOpen, onClose, event, onEdit, onDelete }) => {
     }
     const optionsDate = { weekday: 'long', month: 'long', day: 'numeric' };
     const formattedDate = dateObj.toLocaleDateString('en-US', optionsDate);
-    return `${formattedDate}, ${event.startTime} - ${event.endTime}`;
+    
+    let timeDisplay;
+    if (event.startTime === event.endTime) {
+      timeDisplay = event.startTime;
+    } else {
+      timeDisplay = `${event.startTime} - ${event.endTime}`;
+    }
+    
+    return `${formattedDate}, ${timeDisplay}`;
   };
 
   const getWeekday = (date) => {
@@ -36,7 +44,7 @@ const EventInfoModal = ({ isOpen, onClose, event, onEdit, onDelete }) => {
     if (!event.repeat || !event.repeat.type || event.repeat.type === 'Does not repeat') {
       return 'Does not repeat';
     }
-    
+
     const isAllDay = !event.startTime || !event.endTime;
     const allDayPrefix = isAllDay ? 'All day, ' : '';
 
@@ -77,13 +85,17 @@ const EventInfoModal = ({ isOpen, onClose, event, onEdit, onDelete }) => {
         <div className="event-info-details">
           <div className="event-info-row">
             <FontAwesomeIcon icon={faClock} size='sm' color='#5B5F6E'/>
-            <div className="event-info-text">
+            <div className='event-info-row-date-time'>
               <span>{formatDateRange()}</span>
-              {event.repeat && event.repeat.type && event.repeat.type !== 'Does not repeat' && (
-                <span>{getRepeatDisplayText()}</span>
-              )}
+              <div className='event-info-row-all-repeat-day'>
+                {event.allDay && (
+                  <span>All day, </span>
+                )}
+                {event.repeat && event.repeat.type && event.repeat.type !== 'Does not repeat' && (
+                  <span>{getRepeatDisplayText()}</span>
+                )}
+              </div>
             </div>
-            
           </div>
           <div className="event-info-row">
             <FontAwesomeIcon icon={faCalendarDays} size='sm' color='#5B5F6E'/>

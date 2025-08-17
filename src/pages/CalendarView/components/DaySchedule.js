@@ -79,6 +79,38 @@ const DaySchedule = ({ date, events, calendars, onEventClick }) => {
           <div className="day-number">{dayNumber}</div>
           <div className="day-name">{dayName}</div>
         </div>
+        <div className="day-events-summary">
+          {dayEvents.length > 0 && (
+            <div className="events-list">
+              {dayEvents.slice(0, 3).map(event => {
+                const calendar = calendars.find(cal => cal.id === event.calendarId);
+                const color = event.color || (calendar ? calendar.color : '#4254AF');
+                
+                return (
+                  <div 
+                    key={event.id} 
+                    className="day-event-item"
+                    style={{
+                      backgroundColor: color + "80",
+                      color: 'white',
+                      cursor: 'pointer',
+                      borderLeft: `3px solid ${color}`
+                    }}
+                    onClick={() => onEventClick(event)}
+                    title={event.title}
+                  >
+                    {event.title}
+                  </div>
+                );
+              })}
+              {dayEvents.length > 3 && (
+                <div className="more-events" style={{ fontSize: '9px', color: '#666', marginTop: '2px' }}>
+                  +{dayEvents.length - 3} more
+                </div>
+              )}
+            </div>
+          )}
+        </div>
       </div>
       
       <div className="day-content">
@@ -102,11 +134,12 @@ const DaySchedule = ({ date, events, calendars, onEventClick }) => {
             return timeEvents.map((event, index) => {
               const endMinutes = parseTimeToMinutes(event.endTime);
               const top = startMinutes * pixelsPerMinute;
-              const height = (endMinutes - startMinutes) * pixelsPerMinute;
+              const duration = endMinutes - startMinutes;
+              const height = duration === 0 ? 20 : duration * pixelsPerMinute;
               
               const eventWidth = 100 / totalEvents;
-              const leftOffset = (eventWidth * index) + (2 / totalEvents);
-              const rightOffset = 100 - (eventWidth * (index + 1)) + (2 / totalEvents);
+              const leftOffset = (eventWidth * index);
+              const rightOffset = 100 - (eventWidth * (index + 1));
               
               const style = {
                 position: 'absolute',

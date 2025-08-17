@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { getEventsForDateRange } from '../../utils/eventRepetition';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPen, faTrash} from '@fortawesome/free-solid-svg-icons';
+import { faPen, faTrash, faCircleUser} from '@fortawesome/free-solid-svg-icons';
 import { addCalendar, editCalendar, deleteCalendar, toggleCalendarVisibility } from '../../entities/calendars/calendarsSlice';
 import { addEvent, editEvent, deleteEvent } from '../../entities/events/eventsSlice';
 import DatePicker from '../../ui-kit/DatePicker';
@@ -126,6 +126,7 @@ const CalendarView = () => {
           color: eventData.color,
           calendarId: eventData.calendarId || (calendars.length > 0 ? calendars[0].id : null),
           repeat: eventData.repeat,
+          allDay: eventData.allDay,
         }
       }));
     } else {
@@ -138,6 +139,7 @@ const CalendarView = () => {
         color: eventData.color,
         calendarId: eventData.calendarId || (calendars.length > 0 ? calendars[0].id : null),
         repeat: eventData.repeat,
+        allDay: eventData.allDay,
       }));
     }
     setIsModalOpen(false);
@@ -178,9 +180,15 @@ const CalendarView = () => {
     setIsDeleteModalOpen(true);
   };
 
+  const showToast = (message) => {
+    setToastMessage(message);
+    setIsToastVisible(true);
+  };
+
   const handleDeleteConfirm = () => {
     if (selectedEvent) {
       dispatch(deleteEvent(selectedEvent.id));
+      showToast(`Event deleted`);
       setSelectedEvent(null);
     }
     if (deletingCalendar) {
@@ -243,6 +251,7 @@ const CalendarView = () => {
           <Dropdown options={['Day', 'Week']} defaultOption={viewMode} onChange={handleViewChange} className='switch-option' />
           <div className='user-profile'>
             <h4>Username</h4>
+            <FontAwesomeIcon icon={faCircleUser} size='lg' color='#5B5F6E'/>
           </div>
         </div>
       </header>
@@ -255,27 +264,30 @@ const CalendarView = () => {
               <h3>My calendars</h3>
               <button onClick={handleCalendarCreateClick}>+</button>
             </div>
-            {calendars.map((calendar) => (
-              <div key={calendar.id} className="calendar-item">
-                <Checkbox
-                  checked={calendar.visible}
-                  onChange={() => dispatch(toggleCalendarVisibility(calendar.id))}
-                  label={calendar.name}
-                  color={calendar.color}
-                  disabled={calendar.isDefault}
-                />
-                <div className="calendar-actions">
-                  {!calendar.isDefault && (
-                    <button className="delete-btn" onClick={() => handleDeleteCalendar(calendar)}>
-                      <FontAwesomeIcon icon={faTrash} style={{ color: '#323749' }} />
+            <div className='calendar-all-items'>
+              {calendars.map((calendar) => (
+                <div key={calendar.id} className="calendar-item">
+                  <Checkbox
+                    checked={calendar.visible}
+                    onChange={() => dispatch(toggleCalendarVisibility(calendar.id))}
+                    label={calendar.name}
+                    color={calendar.color}
+                    disabled={calendar.isDefault}
+                  />
+                  <div className="calendar-actions">
+                    {!calendar.isDefault && (
+                      <button className="delete-btn" onClick={() => handleDeleteCalendar(calendar)}>
+                        <FontAwesomeIcon icon={faTrash} style={{ color: '#323749' }} />
+                      </button>
+                    )}
+                    <button className="edit-btn" onClick={() => handleEditCalendar(calendar)}>
+                      <FontAwesomeIcon icon={faPen} style={{ color: '#323749' }} />
                     </button>
-                  )}
-                  <button className="edit-btn" onClick={() => handleEditCalendar(calendar)}>
-                    <FontAwesomeIcon icon={faPen} style={{ color: '#323749' }} />
-                  </button>
+                  </div>
                 </div>
-              </div>
-            ))}
+              ))}
+            </div>
+            
           </div>
         </nav>
         <main>

@@ -78,10 +78,6 @@
   margin-bottom: 10px;
 }
 
-.event-info-text{
-  display: grid;
-}
-
 .description {
   white-space: pre-wrap;
 }

@@ -10,6 +10,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSquare } from '@fortawesome/free-solid-svg-icons';
 import './EventModal.css';
 import Inputs from '../../../ui-kit/Inputs';
+import { faT, faClock, faCalendarDays, faBarsStaggered } from '@fortawesome/free-solid-svg-icons';
 
 const EventModal = ({ isOpen, onClose, onSave, event }) => {
   const [title, setTitle] = useState('');
@@ -26,7 +27,7 @@ const EventModal = ({ isOpen, onClose, onSave, event }) => {
   const [errors, setErrors] = useState({});
 
 
-  const [repeatEnabled, setRepeatEnabled] = useState(false);
+  const [allDay, setAllDay] = useState(false);
   const [repeatType, setRepeatType] = useState('Does not repeat');
 
   useEffect(() => {
@@ -47,12 +48,11 @@ const EventModal = ({ isOpen, onClose, onSave, event }) => {
       const calendar = calendars.find(cal => cal.id === event.calendarId);
       setColor(calendar ? calendar.color : (calendars.length > 0 ? calendars[0].color : '#000000'));
       if (event.repeat) {
-        setRepeatEnabled(true);
         setRepeatType(event.repeat.type || 'Does not repeat');
       } else {
-        setRepeatEnabled(false);
         setRepeatType('Does not repeat');
       }
+      setAllDay(event.allDay || false);
     } else {
       setTitle('');
       setDate(null);
@@ -62,7 +62,7 @@ const EventModal = ({ isOpen, onClose, onSave, event }) => {
       setDescription('');
       setSelectedCalendarId(calendars.length > 0 ? calendars[0].id : null);
       setColor(calendars.length > 0 ? calendars[0].color : '');
-      setRepeatEnabled(false);
+      setAllDay(false);
       setRepeatType('Does not repeat');
     }
   }, [event, calendars]);
@@ -89,7 +89,7 @@ const EventModal = ({ isOpen, onClose, onSave, event }) => {
     if (!date) newErrors.date = 'Date is required';
     if (!startTime) newErrors.startTime = 'Start time is required';
     if (!endTime) newErrors.endTime = 'End time is required';
-    if (startTime && endTime && startTime >= endTime) newErrors.endTime = 'End time must be after start time';
+    if (startTime && endTime && startTime > endTime) newErrors.endTime = 'End time must be after or equal to start time';
 
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
@@ -98,7 +98,7 @@ const EventModal = ({ isOpen, onClose, onSave, event }) => {
 
     setErrors({});
 
-    const repeatInfo = repeatEnabled && repeatType !== 'Does not repeat' ? {
+    const repeatInfo = repeatType !== 'Does not repeat' ? {
       type: repeatType,
     } : null;
 
@@ -109,7 +109,7 @@ const EventModal = ({ isOpen, onClose, onSave, event }) => {
       return `${year}-${month}-${day}`;
     };
 
-    onSave({ title, date: formatLocalDate(date), startTime, endTime, description, color, calendarId: selectedCalendarId, repeat: repeatInfo });
+    onSave({ title, date: formatLocalDate(date), startTime, endTime, description, color, calendarId: selectedCalendarId, repeat: repeatInfo, allDay });
     setTitle('');
     setDate(null);
     setIsDatePickerOpen(false);
@@ -118,7 +118,7 @@ const EventModal = ({ isOpen, onClose, onSave, event }) => {
     setDescription('');
     setColor(calendars.length > 0 ? calendars[0].color : '#000000');
     setSelectedCalendarId(calendars.length > 0 ? calendars[0].id : null);
-    setRepeatEnabled(false);
+    setAllDay(false);
     setRepeatType('Does not repeat');
   };
 
@@ -142,49 +142,73 @@ const EventModal = ({ isOpen, onClose, onSave, event }) => {
       className="modal-overlay"
     >
       <div className='modal-content'>
-        <Inputs
-          label='Title'
-          type='text'
-          value={title}
-          onChange={e => {
-            setTitle(e.target.value);
-            setErrors(prev => ({ ...prev, title: false }));
-          }}
-          placeholder='Enter title'
-          className='event-input'
-          error={errors.title ? true : false}
-        />
+        <div className='event-modal-content'>
+          <FontAwesomeIcon icon={faT} size='sm' color='#5B5F6E'/>
+          <Inputs
+            label='Title'
+            type='text'
+            value={title}
+            onChange={e => {
+              setTitle(e.target.value);
+              setErrors(prev => ({ ...prev, title: false }));
+            }}
+            placeholder='Enter title'
+            className='event-input'
+            error={errors.title ? true : false}
+          />
+        </div>
+        
         <div className='data-time-area'>
           <div className='data-area'>
-          <Inputs
-              label='Data'
-              type="text"
-              className="date-input"
-              onClick={handleDateInputClick}
-              onChange={e => {
-                const newValue = e.target.value;
-                setInputValue(newValue);
-                setErrors(prev => ({ ...prev, date: false }));
-              }}
-              value={inputValue}
-              placeholder="Select date"
-              error={errors.date ? true : false}
-            />
-            {isDatePickerOpen && (
-              <DatePicker
-                initialDate={date}
-                onDateChange={handleDateSelect}
+            <FontAwesomeIcon icon={faClock} size='sm' color='#5B5F6E'/>
+            <div className='data-area-content'>
+              <Inputs
+                label='Data'
+                type="text"
+                className="date-input"
+                onClick={handleDateInputClick}
+                onChange={e => {
+                  const newValue = e.target.value;
+                  setInputValue(newValue);
+                  setErrors(prev => ({ ...prev, date: false }));
+                }}
+                value={inputValue}
+                placeholder="Select date"
+                error={errors.date ? true : false}
               />
-            )}
+              {isDatePickerOpen && (
+                <DatePicker
+                  initialDate={date}
+                  onDateChange={handleDateSelect}
+                />
+              )}
+            </div>
+            
           </div>
           <div className='time-area'>
-            <SelectMenu label='Time' value={startTime} onChange={setStartTime} error={errors.startTime ? true : false} />
+            <SelectMenu 
+              label='Time' 
+              value={startTime} 
+              onChange={setStartTime} 
+              error={errors.startTime ? true : false} 
+              style={{width: '70px'}}
+            />
             <span>-</span>
-            <SelectMenu label='Time' value={endTime} onChange={setEndTime} error={errors.endTime ? true : false} />
+            <SelectMenu 
+              label='Time' 
+              value={endTime} 
+              onChange={setEndTime} 
+              error={errors.endTime ? true : false} 
+              style={{width: '70px'}}
+            />
           </div>
         </div>
         <div className='repeat-area'>
-          <Checkbox label='All day' checked={repeatEnabled} onChange={e => setRepeatEnabled(e.target.checked)} />
+          <Checkbox 
+            label='All day' 
+            checked={allDay} 
+            onChange={e => setAllDay(e.target.checked)} 
+          />
           <SelectMenu
             className='repeat-select'
             value={repeatType}
@@ -197,10 +221,10 @@ const EventModal = ({ isOpen, onClose, onSave, event }) => {
               { value: 'Annually on', label: `Annually on ${getMonthDay(date)}` },
             ]}
             style={ {width: '150px'} }
-            disabled={!repeatEnabled}
           />
         </div>
         <div className='calendar-select-area'>
+          <FontAwesomeIcon icon={faCalendarDays} size='sm' color='#5B5F6E'/>
           <SelectMenu
             label='Calendar'
             id='calendar-select'
@@ -224,7 +248,10 @@ const EventModal = ({ isOpen, onClose, onSave, event }) => {
             style={{ width: '300px' }}
           />
         </div>
-        <TextArea className='text-area-event' value={description} onChange={value => setDescription(value)} />
+        <div className='description-area'>
+          <FontAwesomeIcon icon={faBarsStaggered} size='sm' color='#5B5F6E'/>
+          <TextArea className='text-area-event' value={description} onChange={value => setDescription(value)} />
+        </div>
         <div className='save-event-btn'>
           <Button onClick={handleSave} variant='primary'>Save</Button>
         </div>

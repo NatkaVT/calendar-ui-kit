@@ -44,18 +44,22 @@ header .header-btn .update-btn{
 
 header .header-user-info{
   display: flex;
+  justify-content: space-between;
   align-items: center;
-  gap: 10px;
+  gap: 20px;
   position: absolute;
   right: 50px;
 }
 
 .header-user-info .switch-option{
   z-index: 1200;
+
 }
 
 header .header-user-info .user-profile{
   display: flex;
+  align-items: center;
+  gap: 10px;
 }
 
 nav{
@@ -84,10 +88,10 @@ nav .update-datepicker{
   z-index: 1600;
   grid-row: 3/4;
   margin-top: -210px;
-  /* --rdp-day-width: 45px;
+  --rdp-day-width: 45px;
   --rdp-day-height: 40px;
   --rdp-day_button-width: 40px;
-  --rdp-day_button-height: 40px; */
+  --rdp-day_button-height: 40px;
 }
 
 nav .update-datepicker .rdp-nav{
@@ -104,6 +108,20 @@ nav .user-calendars{
   grid-row: 4/5;
   box-sizing: border-box;
   position: relative;
+  display: flex;
+  flex-direction: column;
+}
+
+.calendar-all-items{
+  flex: 1;
+  overflow-y: auto;
+  max-height: calc(100% - 40px);
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.calendar-all-items::-webkit-scrollbar {
+  display: none;
 }
 
 .calendar-container{
@@ -115,6 +133,8 @@ nav .user-calendars{
   display: flex;
   justify-content: space-between;
   cursor: pointer;
+  margin-bottom: -10px;
+
 }
 
 .calendar-container .title-user-calendars button{
@@ -128,13 +148,15 @@ nav .user-calendars{
 .calendar-container .calendar-item{
   display: flex;
   justify-content: space-between;
-  padding-right: 10px;
+  padding: 5px 10px 5px 0;
   cursor: pointer;
   transition: background-color 0.2s ease;
+  border-radius: 5px;
 }
 
 .calendar-container .calendar-item:hover{
   background-color: #F6F7F8;
+
 }
 
 .calendar-container .calendar-item button{

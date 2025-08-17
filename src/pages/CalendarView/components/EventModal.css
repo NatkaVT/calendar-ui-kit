@@ -19,14 +19,27 @@
 }
 
 .modal-overlay .event-input {
-  width: 480px;
+  width: 455px;
   border-bottom: 1px solid var(--text-color);
+  background-color: transparent;
 }
 
 .data-time-area {
   display: flex;
   justify-content: space-between;
   width: 100%;
+}
+
+.event-modal-content{
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.data-area{
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
 
 .data-time-area .time-area {
@@ -47,27 +60,39 @@
 .data-time-area .date-input {
   border-bottom: 1px solid var(--text-color);
   display: grid;
-  width: 240px;
+  width: 230px;
 }
 
-.data-time-area .modal-calendar .rdp-nav {
+.data-area-content .rdp-nav {
  padding: 0;
 }
 
 .repeat-area{
   display: flex;
+  align-items: center;
   gap: 30px;
+  margin-left: 25px;
 }
 
 .repeat-area .repeat-select{
   width: 200px;
 }
 
+.description-area{
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+
 .calendar-select-area {
   width: 300px;
   position: relative;
   z-index: 1000;
   margin-top: 10px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
 
 .calendar-select-dropdown {
@@ -82,3 +107,4 @@
 .text-area-event {
   height: 50px;
 }
+

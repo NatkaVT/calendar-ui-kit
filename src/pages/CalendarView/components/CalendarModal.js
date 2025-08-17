@@ -4,6 +4,8 @@ import Modal from '../../../ui-kit/Modal';
 import Button from '../../../ui-kit/Button';
 import Inputs from '../../../ui-kit/Inputs'
 import './CalendarModal.css';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faT, faPalette } from '@fortawesome/free-solid-svg-icons';
 
 const defaultColors = [
   '#9F2957', 
@@ -23,12 +25,14 @@ const defaultColors = [
 const CalendarModal = ({ isOpen, onClose, onSave, initialName, initialColor }) => {
   const [name, setName] = useState('');
   const [color, setColor] = useState(defaultColors[0]);
+  const [hasError, setHasError] = useState(false);
 
   const handleSave = () => {
     if (name.trim() === '') {
-      alert('Please enter a calendar name.');
+      setHasError(true);
       return;
     }
+    setHasError(false);
     onSave(name, color);
     setName('');
     setColor(defaultColors[0]);
@@ -37,6 +41,7 @@ const CalendarModal = ({ isOpen, onClose, onSave, initialName, initialColor }) =
   const handleClose = () => {
     setName('');
     setColor(defaultColors[0]);
+    setHasError(false);
     onClose();
   };
 
@@ -57,21 +62,37 @@ const CalendarModal = ({ isOpen, onClose, onSave, initialName, initialColor }) =
     onClick={e => e.stopPropagation()}
     className="calendar-modal-overlay"
     >
-      <label>Title:</label>
-      <Inputs
-      type='text'
-      value={name}
-      className='input'
-      onChange={(e) => setName(e.target.value)}
-      placeholder="Enter calendar name"
-      />
-      <ColorPicker
-      colors={defaultColors}
-      selected={color}
-      onColorSelect={setColor}
-      className="colorPicker"
-      key={color}
-      />
+      <div className='calendar-modal-name'>
+        <FontAwesomeIcon icon={faT} size='sm' color='#5B5F6E'/>
+        <div className='calendar-modal-name-content'>
+          <h5>Title:</h5>
+          <Inputs
+          type='text'
+          value={name}
+          className={`input ${hasError ? 'input-error' : ''}`}
+          onChange={(e) => {
+            setName(e.target.value);
+            if (hasError && e.target.value.trim() !== '') {
+              setHasError(false);
+            }
+          }}
+          placeholder="Enter calendar name"
+          />
+        </div>
+      </div>
+      <div className='calendar-modal-color'>
+        <FontAwesomeIcon icon={faPalette} size='sm' color='#5B5F6E'/>
+        <div className='calendar-modal-color-content'>
+          <ColorPicker
+          colors={defaultColors}
+          selected={color}
+          onColorSelect={setColor}
+          className="colorPicker"
+          key={color}
+          />
+        </div>
+      </div>
+      
       <div className="calendar-modal-buttons">
         <Button onClick={handleSave} variant='primary'>Save</Button>
       </div>

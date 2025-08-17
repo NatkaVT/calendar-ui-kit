@@ -17,13 +17,29 @@
   box-shadow: 0px 1px 2px 0px #DEDFE5;
   border-top-left-radius: 8px;
   border-top-right-radius: 8px;
+  box-sizing: border-box;
+  transition: height 0.3s ease;
+  position: relative;
+  z-index: 1000;
+  font-weight: bold;
+}
+
+.day-schedule .day-header::after {
+  content: '';
+  position: absolute;
+  left: 50px;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  background-color: #DEDFE5;
+
 }
 
 .day-schedule .date-info {
   display: flex;
   flex-direction: column;
-  align-items: center;
   justify-content: center;
+  align-items: center;
   min-height: 40px;
   flex-shrink: 0;
   margin: 0 55px;
@@ -41,16 +57,45 @@
   line-height: 1;
 }
 
-.day-schedule .day-name {
-  font-size: 12px;
-  font-weight: 500;
-  text-transform: uppercase;
+.day-schedule .day-events-summary {
+  margin-top: 2px;
+  max-height: none;
+  overflow-y: visible;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  width: 95%;
+  padding-left: 55px;
+}
+
+.day-schedule .day-event-item {
+  font-size: 9px;
+  padding: 2px 4px;
+  border-radius: 2px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  cursor: pointer;
+  min-height: 16px;
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.day-schedule .more-events {
+  font-size: 8px;
+  color: #666;
+  margin-top: 2px;
+  padding: 1px 0;
+  flex-shrink: 0;
 }
 
 .day-schedule .day-content {
   flex: 1;
   display: flex;
   overflow-y: auto;
+  position: relative;
 }
 
 .day-schedule .time-axis {
