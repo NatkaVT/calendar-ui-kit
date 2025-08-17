@@ -56,13 +56,21 @@ export const generateRecurringEvents = (event, startDate, endDate) => {
 export const getEventsForDateRange = (events, startDate, endDate) => {
   const allEvents = [];
   
+  const normalizedStartDate = new Date(startDate);
+  normalizedStartDate.setHours(0, 0, 0, 0);
+  
+  const normalizedEndDate = new Date(endDate);
+  normalizedEndDate.setHours(23, 59, 59, 999);
+  
   events.forEach(event => {
     if (event.repeat && event.repeat.type && event.repeat.type !== 'Does not repeat') {
-      const recurringEvents = generateRecurringEvents(event, startDate, endDate);
+      const recurringEvents = generateRecurringEvents(event, normalizedStartDate, normalizedEndDate);
       allEvents.push(...recurringEvents);
     } else {
       const eventDate = new Date(event.date);
-      if (eventDate >= startDate && eventDate <= endDate) {
+      eventDate.setHours(0, 0, 0, 0);
+      
+      if (eventDate >= normalizedStartDate && eventDate <= normalizedEndDate) {
         allEvents.push(event);
       }
     }

@@ -19,7 +19,7 @@ import DeleteConfirmationModal from './components/DeleteConfirmationModal';
 import logo from './logo.png';
 import './CalendarView.css';
 
-const DayView = () => {
+const CalendarView = () => {
   const dispatch = useDispatch();
   const calendars = useSelector((state) => state.calendars.calendars);
   const events = useSelector((state) => state.events.events);
@@ -32,7 +32,6 @@ const DayView = () => {
 
   const [selectedEvent, setSelectedEvent] = useState(null);
   
-
   const [isInfoModalOpen, setIsInfoModalOpen] = useState(false);
 
   const [editingCalendar, setEditingCalendar] = useState(null);
@@ -44,7 +43,9 @@ const DayView = () => {
   function getStartOfWeek(date) {
     const day = date.getDay();
     const diff = date.getDate() - day;
-    return new Date(date.setDate(diff));
+    const startOfWeek = new Date(date.setDate(diff));
+    startOfWeek.setHours(0, 0, 0, 0); 
+    return startOfWeek;
   }
 
   const handleToday = () => {
@@ -144,7 +145,6 @@ const DayView = () => {
   };
 
   const handleEventClick = (event) => {
-    // Якщо це повторювана подія, знаходимо оригінальну подію
     let originalEvent = event;
     if (event.originalEventId) {
       originalEvent = events.find(e => e.id === event.originalEventId) || event;
@@ -156,7 +156,7 @@ const DayView = () => {
       ...originalEvent,
       calendarName: calendar ? calendar.name : 'N/A',
       calendarColor: calendar ? calendar.color : '#000000',
-      date: event.date || originalEvent.date || '', // Використовуємо дату клікнутої події
+      date: event.date || originalEvent.date || '',
       startTime: originalEvent.startTime || '',
       endTime: originalEvent.endTime || '',
       calendarId: originalEvent.calendarId,
@@ -281,11 +281,25 @@ const DayView = () => {
         <main>
           {viewMode === 'Week' ? (
             <WeekView
-              events={getEventsForDateRange(
-                events.filter(event => calendars.filter(cal => cal.visible).map(cal => cal.id).includes(event.calendarId)),
-                new Date(currentWeekStart),
-                new Date(new Date(currentWeekStart).setDate(new Date(currentWeekStart).getDate() + 7))
-              )}
+              events={(() => {
+                const filteredEvents = events.filter(event => 
+                  calendars.filter(cal => cal.visible).map(cal => cal.id).includes(event.calendarId)
+                );
+                
+                const normalizedStartDate = new Date(currentWeekStart);
+                normalizedStartDate.setHours(0, 0, 0, 0);
+                
+                const normalizedEndDate = new Date(new Date(currentWeekStart).setDate(new Date(currentWeekStart).getDate() + 7));
+                normalizedEndDate.setHours(23, 59, 59, 999);
+                
+                const dateRangeEvents = getEventsForDateRange(
+                  filteredEvents,
+                  new Date(currentWeekStart),
+                  new Date(new Date(currentWeekStart).setDate(new Date(currentWeekStart).getDate() + 7))
+                );
+                
+                return dateRangeEvents;
+              })()}
               calendars={calendars}
               currentWeekStart={currentWeekStart}
               setCurrentWeekStart={setCurrentWeekStart}
@@ -293,14 +307,11 @@ const DayView = () => {
             />
           ) : (
             <DaySchedule
-              events={getEventsForDateRange(
-                events.filter(event => calendars.filter(cal => cal.visible).map(cal => cal.id).includes(event.calendarId)),
-                new Date(currentDate),
-                new Date(currentDate)
+              events={events.filter(event => 
+                calendars.filter(cal => cal.visible).map(cal => cal.id).includes(event.calendarId)
               )}
               calendars={calendars}
               date={currentDate}
-              setCurrentDate={setCurrentDate}
               onEventClick={handleEventClick}
             />
           )}
@@ -342,4 +353,4 @@ const DayView = () => {
   );
 };
 
-export default DayView;
+export default CalendarView;

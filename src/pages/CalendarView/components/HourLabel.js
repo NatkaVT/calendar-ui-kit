@@ -9,10 +9,16 @@ const formatHour = (hour) => {
   return `${hour12} ${period}`;
 };
 
-const HourLabel = () => {
+const HourLabel = ({ sharedHeaderHeight }) => {
   return (
     <div className="hour-label-column">
-      <div className="hour-label-header"></div>
+      <div 
+        className="hour-label-header"
+        style={{
+          height: `${sharedHeaderHeight}px`,
+          minHeight: `${sharedHeaderHeight}px`
+        }}
+      ></div>
       {hours.map(hour => (
         <div key={hour} className="hour-label-cell">
           {formatHour(hour)}

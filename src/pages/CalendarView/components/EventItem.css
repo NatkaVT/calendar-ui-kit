@@ -3,7 +3,26 @@
   border-radius: 4px;
   font-size: 12px;
   overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
   cursor: pointer;
+  padding: 4px 6px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  min-height: 20px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+.event-title {
+  font-weight: 500;
+  margin-bottom: 2px;
+  word-wrap: break-word;
+  white-space: normal;
+  line-height: 1.2;
+}
+
+.event-time {
+  font-size: 10px;
+  opacity: 0.9;
+  white-space: nowrap;
 }

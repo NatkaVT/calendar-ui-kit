@@ -5,7 +5,7 @@ import './DayColumn.css';
 
 const hours = Array.from({ length: 24 }, (_, i) => i);
 
-const DayColumn = ({ date, events, calendars, onEventClick }) => {
+const DayColumn = ({ date, events, calendars, onEventClick, sharedHeaderHeight }) => {
   const dayName = date.toLocaleDateString('en-US', { weekday: 'short' });
   const dayNumber = date.getDate();
 
@@ -57,7 +57,13 @@ const DayColumn = ({ date, events, calendars, onEventClick }) => {
 
   return (
     <div className="day-column">
-      <div className='day-header'>
+      <div 
+        className='day-header'
+        style={{
+          height: `${sharedHeaderHeight}px`,
+          minHeight: `${sharedHeaderHeight}px`
+        }}
+      >
         <div className={`data-info ${isToday() ? 'current-day' : ''}`}>
           <div className="day-number">{dayNumber}</div>
           <div className="day-name">{dayName}</div>
